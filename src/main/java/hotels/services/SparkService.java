@@ -27,7 +27,7 @@ public class SparkService {
         ss.sparkContext().hadoopConfiguration().set("fs.azure.account.oauth2.client.id." + PROPERTIES.getProperty("azure.path"), PROPERTIES.getProperty("fs.azure.account.oauth2.client.id"));
         ss.sparkContext().hadoopConfiguration().set("fs.azure.account.oauth2.client.secret." + PROPERTIES.getProperty("azure.path"), PROPERTIES.getProperty("fs.azure.account.oauth2.client.secret"));
         ss.sparkContext().hadoopConfiguration().set("fs.azure.account.oauth2.client.endpoint." + PROPERTIES.getProperty("azure.path"), PROPERTIES.getProperty("fs.azure.account.oauth2.client.endpoint"));
-        ss.sparkContext().hadoopConfiguration().set("fs.azure.account.key.stmsixwesteurope.blob.core.windows.net", "rL6i12KUUOPZaHzSlY3Cp9vtQ4ewtIfD8jDyTkqQXoydAwRtDUovAzlolEMuHKf9SSfTumZE4CCUGsNfyp8UOQ==");
+        ss.sparkContext().hadoopConfiguration().set("fs.azure.account.key."+PROPERTIES.getProperty("azure.storageaccount"), PROPERTIES.getProperty("azure.storageaccount.key"));
 
         return ss;
     }

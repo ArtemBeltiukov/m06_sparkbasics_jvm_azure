@@ -5,6 +5,7 @@ docker-compose.yml
 /docker
 /terraform/.terraform/
 /terraform/.terraform.lock.hcl
+/src/main/resources/application.properties
 
 # idea
 /.idea
