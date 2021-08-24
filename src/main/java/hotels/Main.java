@@ -64,6 +64,7 @@ public class Main {
         cache
                 .write()
                 .mode(SaveMode.Overwrite)
-                .parquet("wasbs://data@stmsixwesteurope.blob.core.windows.net/data");
+                .parquet("wasbs://data@"+ PROPERTIES.getProperty("azure.storageaccount")+"/data");
+
     }
 }
