@@ -36,7 +36,7 @@ public class Main {
         JavaRDD<Hotel> hotelJavaRDD = hotelDataset
                 .filter((FilterFunction<Hotel>) x -> x.getLongitude() != null && x.getLatitude() != null)
                 .filter((FilterFunction<Hotel>) x -> !x.getLongitude().equals("NA") && !x.getLatitude().equals("NA"))
-//                .filter(cc::compareWithOpenCage)
+                .filter(cc::compareWithOpenCage)
                 .toJavaRDD()
                 .map(x -> {
                     GeoHash geoHash = cc.getGeoHash(x);
