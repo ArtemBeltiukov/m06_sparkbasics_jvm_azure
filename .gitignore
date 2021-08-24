@@ -1,0 +1,16 @@
+*.class
+*.log
+/result
+docker-compose.yml
+/docker
+/terraform/.terraform/
+/terraform/.terraform.lock.hcl
+
+# idea
+/.idea
+/target
+
+*.iml
+
+### Mac ###
+.DS_Store

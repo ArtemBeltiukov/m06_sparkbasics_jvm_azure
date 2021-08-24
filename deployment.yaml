@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kube-spark
+spec:
+  selector: # Define the wrapping strategy
+    matchLabels: # Match all pods with the defined labels
+      app: kube-spark # Labels follow the `name: value` template
+  template: # This is the template of the pod inside the deployment
+    metadata:
+      labels:
+        app: kube-spark
+    spec:
+      containers:
+        - image: kube/spark:tag
+          name: kube-spark
+          resources:
+            requests:
+              cpu: 2000m
+              memory: 2048Mi
+            limits:
+              cpu: 2500m
+              memory: 2560Mi
+          ports:
+            - containerPort: 443 # This container exposes port 80
+              name: https # We named that port "http" so we can refer to it later
