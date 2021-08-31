@@ -1,9 +1,9 @@
 terraform {
   backend "azurerm" {
 	container_name			= "m06"
-	storage_account_name 	= "stresourcewesteurope"
-	key						= "stresourcewesteurope"
-	sas_token 				= "?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupx&se=2030-08-20T21:31:59Z&st=2021-08-20T13:31:59Z&spr=https,http&sig=MI1mhtwi%2FK9YMTfOY49yLqXzrGZD%2FmiatnHAj5UVoKc%3D"
+	storage_account_name 	= "accmsix"
+	key						= "accmsix"
+	sas_token 				= "?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacuptfx&se=2030-08-27T17:59:48Z&st=2021-08-27T09:59:48Z&spr=https&sig=yO3OhAsXeLN7RwrDSkrlMgt1vAeGCW%2FbaJiT6fmpqjk%3D"
   }
 }
 
@@ -16,7 +16,7 @@ provider "azurerm" {
 data "azurerm_client_config" "current" {}
 
 resource "azurerm_resource_group" "bdcc" {
-  name     = "rg-${var.ENV}-${var.LOCATION}"
+  name = "rg-${var.ENV}-${var.LOCATION}"
   location = var.LOCATION
 
   lifecycle {
@@ -25,24 +25,24 @@ resource "azurerm_resource_group" "bdcc" {
 
   tags = {
     region = var.BDCC_REGION
-    env    = var.ENV
+    env = var.ENV
   }
 }
 
 resource "azurerm_storage_account" "bdcc" {
   depends_on = [
-  azurerm_resource_group.bdcc]
+    azurerm_resource_group.bdcc]
 
-  name                     = "st${var.ENV}${var.LOCATION}"
-  resource_group_name      = azurerm_resource_group.bdcc.name
-  location                 = azurerm_resource_group.bdcc.location
-  account_tier             = "Standard"
+  name = "st${var.ENV}${var.LOCATION}"
+  resource_group_name = azurerm_resource_group.bdcc.name
+  location = azurerm_resource_group.bdcc.location
+  account_tier = "Standard"
   account_replication_type = var.STORAGE_ACCOUNT_REPLICATION_TYPE
-  is_hns_enabled           = "true"
+  is_hns_enabled = "true"
 
   network_rules {
     default_action = "Allow"
-    ip_rules       = values(var.IP_RULES)
+    ip_rules = values(var.IP_RULES)
   }
 
   lifecycle {
@@ -51,15 +51,15 @@ resource "azurerm_storage_account" "bdcc" {
 
   tags = {
     region = var.BDCC_REGION
-    env    = var.ENV
+    env = var.ENV
   }
 }
 
 resource "azurerm_storage_data_lake_gen2_filesystem" "gen2_data" {
   depends_on = [
-  azurerm_storage_account.bdcc]
+    azurerm_storage_account.bdcc]
 
-  name               = "data"
+  name = "data"
   storage_account_id = azurerm_storage_account.bdcc.id
 
   lifecycle {
@@ -70,7 +70,7 @@ resource "azurerm_storage_data_lake_gen2_filesystem" "gen2_data" {
 
 resource "azurerm_kubernetes_cluster" "bdcc" {
   depends_on = [
-  azurerm_resource_group.bdcc]
+    azurerm_resource_group.bdcc]
 
   name                = "aks-${var.ENV}-${var.LOCATION}"
   location            = azurerm_resource_group.bdcc.location
@@ -89,7 +89,7 @@ resource "azurerm_kubernetes_cluster" "bdcc" {
 
   tags = {
     region = var.BDCC_REGION
-    env    = var.ENV
+    env = var.ENV
   }
 }
 
