@@ -1,9 +1,6 @@
 terraform {
   backend "azurerm" {
-	container_name			= "m06"
-	storage_account_name 	= "accmsix"
-	key						= "accmsix"
-	sas_token 				= "?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacuptfx&se=2030-08-27T17:59:48Z&st=2021-08-27T09:59:48Z&spr=https&sig=yO3OhAsXeLN7RwrDSkrlMgt1vAeGCW%2FbaJiT6fmpqjk%3D"
+
   }
 }
 
