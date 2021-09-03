@@ -1,22 +1,19 @@
-* Add your code in `src/main/`
-* Test your code with `src/tests/`
-* Package your artifacts
-* Modify dockerfile if needed
-* Build and push docker image
-* Deploy infrastructure with terraform
+* Build application with maven
+* Build docker image and run
 ```
-terraform init
-terraform plan -out terraform.plan
-terraform apply terraform.plan
-....
-terraform destroy
-```
-* Launch Spark app in cluster mode on AKS
-```
+docker build . -t hotels:latest -f docker\Dockerfile
+docker run hotels \
 spark-submit \
-    --master k8s://https://<k8s-apiserver-host>:<k8s-apiserver-port> \
-    --deploy-mode cluster \
-    --name sparkbasics \
-    --conf spark.kubernetes.container.image=<spark-image> \
-    ...
+--master k8s://https://sparkakscl-sparkcluster-5f194d-bdf8fad5.hcp.westeurope.azmk8s.io:443 \
+--conf spark.kubernetes.file.upload.path=/mnt/m06 \
+--class hotels.Main \
+--deploy-mode cluster \
+--executor-memory 8G \
+--executor-cores 2 \
+--name hotels \
+--conf spark.executor.instances=1 \
+--conf spark.kubernetes.container.image=fuskero.azurecr.io/spark:latest \
+--conf spark.kubernetes.authenticate.driver.serviceAccountName=spark \
+\target\sparkbasics-1.0.0-jar-with-dependencies.jar
 ```
+

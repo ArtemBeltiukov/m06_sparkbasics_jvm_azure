@@ -53,18 +53,19 @@ public class Main {
 
         weatherDataset = ss.createDataset(weatherJavaRDD.rdd(), Encoders.bean(Weather.class));
         hotelDataset = ss.createDataset(hotelJavaRDD.rdd(), Encoders.bean(Hotel.class));
+
         // join hotel data to weather data
         Dataset<Tuple2<Weather, Hotel>> result
                 = weatherDataset
                 .joinWith(hotelDataset, weatherDataset.col("geoHash").equalTo(hotelDataset.col("geoHash")), "left");
 
-        Dataset<Tuple2<Weather, Hotel>> cache = result.cache();
         // save result
-        System.out.println(cache.count());
-        cache
+        result
+                .coalesce(1)
                 .write()
                 .mode(SaveMode.Overwrite)
-                .parquet("wasbs://data@"+ PROPERTIES.getProperty("azure.storageaccount")+"/data");
+                .option("header", "true")
+                .parquet(PROPERTIES.getProperty("azure.saveFolder"));
 
     }
 }

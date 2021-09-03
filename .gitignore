@@ -1,7 +1,6 @@
 *.class
 *.log
 /result
-docker-compose.yml
 /docker
 /terraform/.terraform/
 /terraform/.terraform.lock.hcl

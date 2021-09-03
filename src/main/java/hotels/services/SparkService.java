@@ -11,14 +11,7 @@ public class SparkService {
         // Create spark session
         SparkSession ss = SparkSession
                 .builder()
-                .master("k8s://https://test-dns-13510061.hcp.westeurope.azmk8s.io:443")
-                .config("spark.kubernetes.container.image", "fuskero/art180:latest")
-                .config("spark.executor.memory", "2G")
-                .config("spark.executor.cores", "1")
-                .config("spark.cores.max", "4")
-                .config("spark.submit.deployMode", "cluster")
-                .config("spark.shuffle.service.enabled", "false")
-                .config("spark.dynamicAllocation.enabled", "false")
+                .master("local[*]")
                 .appName("hotels")
                 .getOrCreate();
 
