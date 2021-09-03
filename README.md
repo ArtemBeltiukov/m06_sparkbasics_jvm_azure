@@ -17,3 +17,4 @@ spark-submit \
 \target\sparkbasics-1.0.0-jar-with-dependencies.jar
 ```
 
+GitHub: https://github.com/ArtemBeltiukov/m06_sparkbasics_jvm_azure
