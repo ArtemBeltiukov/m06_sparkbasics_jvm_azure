@@ -1,7 +1,6 @@
 *.class
 *.log
 /result
-/docker
 /terraform/.terraform/
 /terraform/.terraform.lock.hcl
 /src/main/resources/application.properties
