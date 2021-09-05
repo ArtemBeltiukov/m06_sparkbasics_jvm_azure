@@ -11,8 +11,6 @@ import org.apache.spark.api.java.function.FilterFunction;
 import org.apache.spark.sql.*;
 import scala.Tuple2;
 
-import java.util.Map;
-
 public class Main {
 
     private final static PropertiesService PROPERTIES = new PropertiesService();
@@ -79,6 +77,5 @@ public class Main {
                 .mode(SaveMode.Overwrite)
                 .option("header", "true")
                 .parquet(PROPERTIES.getProperty("azure.saveFolder"));
-
     }
 }
