@@ -11,6 +11,8 @@ import org.apache.spark.api.java.function.FilterFunction;
 import org.apache.spark.sql.*;
 import scala.Tuple2;
 
+import java.util.Map;
+
 public class Main {
 
     private final static PropertiesService PROPERTIES = new PropertiesService();
@@ -20,6 +22,13 @@ public class Main {
         SparkService sparkService = new SparkService();
         CoordChecker cc = new CoordChecker();
         SparkSession ss = sparkService.sparkSession();
+
+        Dataset<Tuple2<Weather, Hotel>> filter = ss.read().parquet("/module6/result").as(Encoders.tuple(Encoders.bean(Weather.class), Encoders.bean(Hotel.class)))
+                .filter((FilterFunction<Tuple2<Weather, Hotel>>) x -> x._2() != null);
+
+        Dataset<Row> avg = filter.groupBy(filter.col("_1.year"), filter.col("_1.month"), filter.col("_1.day"), filter.col("_2.name"), filter.col("_2.geoHash")).avg("_1.avg_tmpr_f", "_1.avg_tmpr_c", "_1.lng", "_1.lat").orderBy(filter.col("_1.year"), filter.col("_1.month"), filter.col("_1.day"));
+        avg.show(300, false);
+        System.out.println(avg.count());
 
         // create dataset
         Dataset<Hotel> hotelDataset = ss.read()
@@ -55,9 +64,18 @@ public class Main {
         hotelDataset = ss.createDataset(hotelJavaRDD.rdd(), Encoders.bean(Hotel.class));
 
         // join hotel data to weather data
-        Dataset<Tuple2<Weather, Hotel>> result
+        Dataset<Row> result
                 = weatherDataset
-                .joinWith(hotelDataset, weatherDataset.col("geoHash").equalTo(hotelDataset.col("geoHash")), "left");
+                .joinWith(hotelDataset, weatherDataset.col("geoHash").equalTo(hotelDataset.col("geoHash")), "left")
+                .filter((FilterFunction<Tuple2<Weather, Hotel>>) x -> x._2() != null)
+                .groupBy(
+                        filter.col("_1.year"),
+                        filter.col("_1.month"),
+                        filter.col("_1.day"),
+                        filter.col("_2.name"),
+                        filter.col("_2.geoHash"))
+                .avg("_1.avg_tmpr_f", "_1.avg_tmpr_c", "_1.lng", "_1.lat")
+                .orderBy(filter.col("_1.year"), filter.col("_1.month"), filter.col("_1.day"));
 
         // save result
         result
