@@ -23,13 +23,6 @@ public class Main {
         CoordChecker cc = new CoordChecker();
         SparkSession ss = sparkService.sparkSession();
 
-        Dataset<Tuple2<Weather, Hotel>> filter = ss.read().parquet("/module6/result").as(Encoders.tuple(Encoders.bean(Weather.class), Encoders.bean(Hotel.class)))
-                .filter((FilterFunction<Tuple2<Weather, Hotel>>) x -> x._2() != null);
-
-        Dataset<Row> avg = filter.groupBy(filter.col("_1.year"), filter.col("_1.month"), filter.col("_1.day"), filter.col("_2.name"), filter.col("_2.geoHash")).avg("_1.avg_tmpr_f", "_1.avg_tmpr_c", "_1.lng", "_1.lat").orderBy(filter.col("_1.year"), filter.col("_1.month"), filter.col("_1.day"));
-        avg.show(300, false);
-        System.out.println(avg.count());
-
         // create dataset
         Dataset<Hotel> hotelDataset = ss.read()
                 .option("header", true)
@@ -69,13 +62,15 @@ public class Main {
                 .joinWith(hotelDataset, weatherDataset.col("geoHash").equalTo(hotelDataset.col("geoHash")), "left")
                 .filter((FilterFunction<Tuple2<Weather, Hotel>>) x -> x._2() != null)
                 .groupBy(
-                        filter.col("_1.year"),
-                        filter.col("_1.month"),
-                        filter.col("_1.day"),
-                        filter.col("_2.name"),
-                        filter.col("_2.geoHash"))
+                        weatherDataset.col("_1.year"),
+                        weatherDataset.col("_1.month"),
+                        weatherDataset.col("_1.day"),
+                        weatherDataset.col("_2.name"),
+                        weatherDataset.col("_2.geoHash"))
                 .avg("_1.avg_tmpr_f", "_1.avg_tmpr_c", "_1.lng", "_1.lat")
-                .orderBy(filter.col("_1.year"), filter.col("_1.month"), filter.col("_1.day"));
+                .orderBy(weatherDataset.col("_1.year"),
+                        weatherDataset.col("_1.month"),
+                        weatherDataset.col("_1.day"));
 
         // save result
         result
