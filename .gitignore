@@ -4,7 +4,7 @@
 /terraform/.terraform/
 /terraform/.terraform.lock.hcl
 /src/main/resources/application.properties
-
+/*.7z
 # idea
 /.idea
 /target
